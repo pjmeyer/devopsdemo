@@ -259,3 +259,9 @@ You have now setup and configured the database needed to deploy and run the MySh
     * *fred/fredpassword*
     * *wilma/wilmapassword*
     * *betty/bettypassword*
+
+## Additional Hands-on Labs
+
+If you want to learn more on how you can implement modern DevOps practices with  Team Services and Azure - see [Microsoft VS DevOps Hands-on Labs](https://almvm.azurewebsites.net/)
+
+
