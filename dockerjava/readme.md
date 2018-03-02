@@ -1,4 +1,4 @@
-# Deploying a Dockerized Java App to Azure with VSTS
+# Deploying a Dockerized Java App to Azure with Team Services
 
 ## Overview 
 
@@ -20,45 +20,31 @@ This lab will show how you can
 
 * **Visual Studio Team Services**: You will need a Visual Studio Team Services Account. If you do not have one, you can sign up for free [here](https://www.visualstudio.com/products/visual-studio-team-services-vs)
 
-* **Microsoft Azure Account**: You will need a valid and active Azure account for the Azure labs. Please see the **Content Window** for the username/password that you can use for the lab
+* **Microsoft Azure Account**: You will need a valid and active Azure account for the Azure labs. 
+
+> Please see the **Content Window** for the username/password that you can use for the lab
 
 ## Exercise 1: Setting up the Environment - Azure 
 
-In this exercise, you will create the necessary Azure resources. You need an Azure Container Registry to store the Docker images for our container deployments. Azure Container Registry is a managed Docker registry service based on the open-source Docker Registry 2.0. You can create and maintain Azure container registries to store and manage your private Docker container images. 
+You will start this lab by first creating **Azure Container Registry** -  a managed Docker registry service based on the open-source Docker Registry 2.0.to store and manage your private Docker container images
 
 1. Open the [**Azure Portal**](https://portal.azure.com) in a separate tab
 
-1. Select **+New** and search for **Azure Container Registry**. Select **Create**. In the *Create Container Registry* dialog, enter a name for the service, select the resource group, location, **Enable** Admin User etc., and select **Create**.
+1. Select **+Create a resource** and search for **Azure Container Registry**. Select **Create**. In the *Create Container Registry* dialog, enter a name for the service, select the resource group, location, **Enable** Admin User etc., and select **Create**.
 
     ![Create Azure Container Registry](images/createacr.png)
-
-1. Next, you will create an Azure Web App to deploy and run the containerized web app. Choose **New, Web + Mobile** and then choose **Web App for Containers**
-
-     ![New Web App for Containers](images/newwebapp.png)
-
-1. Provide a name for the new web app, select existing or create new resource group for the web app. Then select **Configure Container** to specify the source repository for the images. Since we are using ACR to store the images, select **Azure Container Registry**. Select the **Registry**, **Image** value as **web** and **Tag** with the latest build value from the drop-downs. Select **OK** and then select **Create** to start provisioning the web app
-
-    ![Creating MyShuttle Web App for Containers](images/myshuttle-webapp.png)
-
-1. Once the provisioning is complete, go to the web app properties page, and select the URL to browse the web app. You should see the default **Tomcat** page
-
-1. Append **/myshuttledev** the web application context path for the app, to the URL to get to the MyShuttle login page. For example if your web app URL is `https://myshuttle-azure.azurewebsites.net/` , then your URL to the login page is `https://myshuttle-azure.azurewebsites.net/myshuttledev/`
-
-    ![Login Page](images/loginpage.png)
-
-    We could configure *Continuous Deployment* to deploy the web app is updated when a new image is pushed to the registry, within the Azure portal itself. However, setting up a VSTS CD pipeline will provide more flexibility and additional controls (approvals, release gates, etc.) for application deployment
 
 ## Exercise 2: Setting up the Environment - Team Services
 
 Next, you will create a Team services project to establish a repository for source code and a place for your team to plan, track progress, and collaborate on building software solutions
 
-1. Navigate to your VSTS account home page - `{https://youraccountname.visualstuduio.com}`
+1. Navigate to your Team Services account home page - `{https://youraccountname.visualstuduio.com}`
 
 1. Select **New Project** to create a new project. Provide a project name and select **Create**
 
     ![New Project](images/createproject.png)
 
-1. This should create an empty project. Next, you will add code to the project. VSTS supports **Git** 
+1. This should create an empty project. Next, you will add code to the project. Team Services supports **Git** 
 
 1. Open a **Terminal** window and enter the following command to change the current working directory
 
@@ -118,7 +104,7 @@ Team Services provides a suite of Agile tools that support the core Agile method
 
     > You can edit a file within the web portal.Or, if you have extensive file edits or need to add files, then you'll need to work from Eclipse, IntelliJ, Visual Studio or other supported IDE
 
-## Exercise 3:  Create a VSTS Build to Build Docker Images
+## Exercise 3:  Create a Team Services Build to Build Docker Images
 
 Next you will build a CI/CD pipeline in Team Services that will build and push the image to an Azure Container Registry
 
@@ -175,15 +161,25 @@ Next you will build a CI/CD pipeline in Team Services that will build and push t
 
 ## Exercise 4: Deploying to an Azure Web App for containers
 
-In this exercise, we will setup a release defintion to deploy the web application to an Azure web app. 
+In this exercise, you will setup a release definition to deploy the web application to an Azure web app. First, you need to create an **Azure Web App for containers** to deploy and run the containerized web app. 
 
-1. Select **Releases** from the **Build and Release** hub. Select **+** and then **Create Release Definition**
+1. Go to the Azure portal - https://portal.azure.com. Choose **New, Web + Mobile** and then choose **Web App for Containers**
+
+     ![New Web App for Containers](images/newwebapp.png)
+
+1. Provide a name for the new web app, select existing or create new resource group for the web app. Then select **Configure Container** to specify the source repository for the images. Since we are using ACR to store the images, select **Azure Container Registry**. Select the **Registry**, **Image** value as **web** and **Tag** with the latest build value from the drop-downs. Select **OK** and then select **Create** to start provisioning the web app
+
+    ![Creating MyShuttle Web App for Containers](images/myshuttle-webapp.png)
+
+    > We could configure *Continuous Deployment* to deploy the web app is updated when a new image is pushed to the registry, within the Azure portal itself. However, setting up a Team Services CD pipeline will provide more flexibility and additional controls (approvals, release gates, etc.) for application deployment
+
+1. Go back to Team Services and select **Releases** from the **Build and Release** hub. Select **+** and then **Create Release Definition**
 
 1. Select the **Azure App Service Deployment** template and click **Apply**
 
 1. Select **Pipeline**. Click **+Add** to add the artifacts. Select **Build** for the source type. Select the **Project**, **Source** and the **Default version**.  Finally select **Add** to save the settings
 
-    ![VSTS Add Artifact](images/vsts-cd-addartifact.png)
+    ![Team Services Add Artifact](images/vsts-cd-addartifact.png)
 
 1. Open the environment. Select **Environment 1** and configure as follows
 
@@ -193,7 +189,7 @@ In this exercise, we will setup a release defintion to deploy the web applicatio
     * Enter the **Azure Container Registry** server url for **Registry or Namespace** and then
     * Enter ***Web*** for the **Repository**
 
-    ![VSTS Release Defintion](images/vsts-cd-webapp.png)
+    ![Team Services Release Defintion](images/vsts-cd-webapp.png)
 
 1. Select the **Deploy Azure App Service** task and make sure that these settings are reflected correctly. Note that the task allows you to specify the **Tag** that you want to pull. This will allow you to achieve end-to-end traceability from code to deployment by using a build-specific tag for each deployment. For example, with the Docker build tasks  you can tag your images with the Build.ID for each deployment.
 
@@ -205,9 +201,9 @@ In this exercise, we will setup a release defintion to deploy the web applicatio
 
 1. Wait for the release is complete and then navigate to the URL `http://{your web app name}.azurewebsites.net/myshuttledev`. You should be able to see the login page
 
-## Setting up MySQL database
+## Optional: Setting up MySQL database
 
-Next, let's set up the MySQL database for the application
+This application requires a MySQL database and in this optional exercise, you will setup a MySQL database on Azure
 
 1. From the Azure portal, select **+ New** and search for **MySQL**. Choose **Azure Database for MySQL(preview)** from the filtered result list and click **Create**. 
 
