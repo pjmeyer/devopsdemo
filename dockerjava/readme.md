@@ -72,9 +72,12 @@ Next, you will create a Team services project to establish a repository for sour
     git push -u origin --all
     ````
 
-### Using Agile tools
+1. Once the code is pushed, you can verify it by going to the Team Services portal and refreshing the code hub page. 
+    ![Team Services Code](images/vsts-code.png)
 
-Team Services provides a suite of Agile tools that support the core Agile methods—Scrum and Kanban—used by software development teams today. 
+### Agile planning
+
+Next, you will see how you can use Team Services to plan, manage, and track work across entire team. Team Services provides a suite of Agile tools that support the core Agile methods—Scrum and Kanban—used by software development teams today. 
 
 1. Navigate to the **Work** hub
 
@@ -185,7 +188,7 @@ In this exercise, you will setup a release definition to deploy the web applicat
     * Pick the Azure subscription
     * Select **Linux App** for the **App Type**
     * Enter the **App Service** name that you created
-    * Enter the **Azure Container Registry** server url for **Registry or Namespace** and then
+    * Enter the **Azure Container Registry** server URL for **Registry or Namespace** and then
     * Enter ***Web*** for the **Repository**
 
     ![Team Services Release Defintion](images/vsts-cd-webapp.png)
