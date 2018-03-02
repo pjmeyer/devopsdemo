@@ -2,11 +2,13 @@
 
 ## Overview 
 
-Containers have fundamentally changed the way developers develop their applications, the way applications are deployed, and the way system administrators manage their environments. Containers offer a broadly accepted and open standard, enabling simple portability between platforms and between clouds. With **Azure Web App** for containers, it is easy to deploy container-based web apps. You can pull container images from Docker Hub or a private Azure Container Registry, and deploy the containerized app with your preferred dependencies to production in seconds.
+Containers have fundamentally changed the way developers develop their applications, the way applications are deployed, and the way system administrators manage their environments. Containers offer a broadly accepted and open standard, enabling simple portability between platforms and between clouds. 
+
+With **Azure Web App** for containers, it is easy to deploy container-based web apps. You can pull container images from Docker Hub or a private Azure Container Registry, and deploy the containerized app with your preferred dependencies to production in seconds.
 
 ### What's covered in this lab
 
-In this lab, you will learn how you can setup a CD pipeline to build, deploy and run a Dockerized Java application with Visual Studio Team Services and Azure
+In this lab, you will learn how you can setup a Continuous Delivery pipeline to build, deploy and run a Dockerized Java application with Visual Studio Team Services and Azure
 
 This lab will show how you can
 
@@ -16,11 +18,23 @@ This lab will show how you can
 
 ### Prerequisites for the lab
 
-* **Visual Studio Team Services**: You will need a Visual Studio Team Services Account. If you do not have one, you can sign up for free [here](https://www.visualstudio.com/products/visual-studio-team-services-vs){:target="_blank"} 
+* **Visual Studio Team Services**: You will need a Visual Studio Team Services Account. If you do not have one, you can sign up for free [here](https://www.visualstudio.com/products/visual-studio-team-services-vs)
 
 * **Microsoft Azure Account**: You will need a valid and active Azure account for the Azure labs. Please see the **Content Window** for the username/password that you can use for the lab
 
-## Setting up Team Services Project 
+## Exercise 1: Setting up the Environment - Azure Container
+
+In this exercise, we will create an Azure Container Registry to store the Docker images for our container deployments. Azure Container Registry is a managed Docker registry service based on the open-source Docker Registry 2.0. You can create and maintain Azure container registries to store and manage your private Docker container images. 
+
+1. Open the [**Azure Portal**](https://portal.azure.com) in a separate tab
+
+1. Select **+New** and search for **Azure Container Registry**. Select **Create**. In the *Create Container Registry* dialog, enter a name for the service, select the resource group, location, **Enable** Admin User etc., and select **Create**.
+
+    ![Create Azure Container Registry](images/createacr.png)
+
+## Exercise 2: Setting up the Environment - Team Services
+
+Next, you will create a Team services project to establish a repository for source code and a place for your team to plan, track progress, and collaborate on building software solutions
 
 1. Navigate to your VSTS account home page - `{https://youraccountname.visualstuduio.com}`
 
@@ -80,25 +94,17 @@ Team Services provides a suite of Agile tools that support the core Agile method
 
     ![Kanban board](images/kanbanboard.png "Kanban Board")
 
-1. Start work on the work item by creating a branch. You can add a new Git branch by clicking the *Ellipsis* from within the card and selecting **New Branch**. 
+    > It is typically recommended to start work on a work item by creating a branch. Branches allow you to isolate changes and track the associated work items for the changes. You can add a new Git branch by clicking the *Ellipsis* from within the card and selecting **New Branch**. Team Services will create a new branch and automatically associate the work item to the branch
 
-    ![Create New Branch](images/createnewbranch.png "Create New Branch")
+1. You can also manually link the work item to a particular branch, commit, Pull request, etc., by opening the work item and selecting the **+ Add link** button under **Development**
 
-1. Branches allow you to isolate changes and track the associated work items for the changes. Name the branch and select **Create branch**
+    ![Link WI to commit](images/linkcommit.png "Associating Work Item to Commit")
 
-    ![Create New Branch](images/newbranch.png "Create New Branch")
-
-1. The system will open to the repository and branch that you just created. You can edit a file within the web portal.Or, if you have extensive file edits or need to add files, then you'll need to work from Eclipse, IntelliJ, Visual Studio or other supported IDE
+    > You can edit a file within the web portal.Or, if you have extensive file edits or need to add files, then you'll need to work from Eclipse, IntelliJ, Visual Studio or other supported IDE
 
 ## Exercise 2:  Create a VSTS Build to Build Docker Images
 
 Next you will build a CI/CD pipeline in Team Services that will build and push the image to an Azure Container Registry
-
-1. Open the [**Azure Portal**](https://portal.azure.com){:target="_blank"} in a separate tab
-
-1. Select **+New** and search for **Azure Container Registry**. Select **Create**. In the *Create Container Registry* dialog, enter a name for the service, select the resource group, location, **Enable** Admin User etc., and select **Create**.
-
-    ![Create Azure Container Registry](images/createacr.png)
 
 1. Return to  VSTS, from the **Build** hub, select and edit the **MyShuttle** build. This build definition contains a *maven* task to build the pom.xml file. The maven task should be updated the following settings
 
@@ -135,7 +141,7 @@ Next you will build a CI/CD pipeline in Team Services that will build and push t
 
 In this exercise, we will setup a CD pipeline to deploy the web application to an Azure web app. First, let's create the Web App.
 
-1. Sign into your [Azure Portal](https://portal.azure.com){:target="_blank}
+1. Sign into your [Azure Portal](https://portal.azure.com)
 
 1. In the Azure Portal, choose **New, Web + Mobile** and then choose **Web App for Containers**
 
