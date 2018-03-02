@@ -155,6 +155,7 @@ Next you will build a CI/CD pipeline in Team Services that will build and push t
 
 1. Click the **Save and Queue** button to save and queue this build. It may take a couple of minutes for the build to find an agent to run. Once it gets an agent, the build starts executing. You can see the output logs in real-time as the build is running. You can also download the log later should you need to a deeper analysis.
 
+    ![Real Time Build Logs in Team Services](images/vsts-build-logs.png "Realtime Build Logs")
 
 1. Wait for the build to complete. When it is successful you can go to your Azure portal and verify if the images were pushed successfully. 
     ![images/Azure Container Registry Images](images/portal-acrrepo.png)
@@ -178,8 +179,6 @@ In this exercise, you will setup a release definition to deploy the web applicat
 1. Select the **Azure App Service Deployment** template and click **Apply**
 
 1. Select **Pipeline**. Click **+Add** to add the artifacts. Select **Build** for the source type. Select the **Project**, **Source** and the **Default version**.  Finally select **Add** to save the settings
-
-    ![Team Services Add Artifact](images/vsts-cd-addartifact.png)
 
 1. Open the environment. Select **Environment 1** and configure as follows
 
