@@ -102,37 +102,56 @@ Team Services provides a suite of Agile tools that support the core Agile method
 
     > You can edit a file within the web portal.Or, if you have extensive file edits or need to add files, then you'll need to work from Eclipse, IntelliJ, Visual Studio or other supported IDE
 
-## Exercise 2:  Create a VSTS Build to Build Docker Images
+## Exercise 3:  Create a VSTS Build to Build Docker Images
 
 Next you will build a CI/CD pipeline in Team Services that will build and push the image to an Azure Container Registry
 
-1. Return to  VSTS, from the **Build** hub, select and edit the **MyShuttle** build. This build definition contains a *maven* task to build the pom.xml file. The maven task should be updated the following settings
+1. Select the **Build** hub. Click the **+ New definition**  button to create a new build definition. 
+
+1. Make sure **VSTS Git** is selected for the source and the project, repository and branch have the correct values.  Select **Continue**
+
+1. Select **Maven** for the template as we are building a Java application using Maven
+
+1. Select the *maven* task and update the following settings
 
     | Parameter | Value | Notes |
     | --------------- | ---------------------------- | ----------------------------------------------------------- |
-    | Options | `-DskipITs --settings ./maven/settings.xml` | Skips integration tests during the build |
+    | Options | `-Dtest=SimpleTest,FaresTest` | runs specific (unit)tests during the build |
     |Code Coverage Tool | JaCoCo | Selects JaCoCo as the coverage tool |
     | Source Files Directory | `src/main` | Sets the source files directory for JaCoCo |
 
       ![Maven task settings](images/vsts-mavensettings.png)
 
-1. Then there is **Copy** and **Publish** tasks to copy the artifacts to the staging directory and publish to VSTS (or a file share).
+1. Then select the **Copy Files** task. Change the following parameters
 
-1. Next we use the **Docker Compose** task to build and publish the images. Set the **Action** as **Build Service Images**. The other settings of the Docker compose tasks are as follows:
+    | Parameter | Value | Notes |
+    | --------------- | ---------------------------- | ----------------------------------------------------------- |
+    | Source Folder | `$(build.sourcesdirectory)` | |
+    |Contents | `target/myshuttledev\*.war |the WAR file to copy  |
+    | Target Folder | `$(build.artifactstagingdirectory)` | Target folder to copy to |
+
+
+1. You can leave the **Publish** tasks with the default values
+
+1. Next you will add Docker tasks build and publish the images. Select the **+** button next to **Phase 1** and enter **docker** in the search window to filter. Select the **Docker Compose** tasks and click the **Add** button twice to add tasks
+
+1. Now, select the first task you added and Set the **Action** to **Build Service Images**.
 
     | Parameter | Value | Notes |
     | --------------- | ---------------------------- | ------------------------------------------- |
     | Container Registry Type | Azure Container Registry | This is to connect to the Azure Container Registry you created earlier |
-    | Azure Subscription | Your Azure subscription | The subscription that contains your registry |
+    | Azure Subscription | Your Azure subscription | The subscription that contains your registry. **Note** Click the **Authorize** button if you are prompted to do so |
     | Azure Container Registry | Your registry | Select the Azure Container registry you created earlier |
     | Additional Image Tags | `$(Build.BuildNumber)` | Sets a unique tag for each instance of the build |
     | Include Latest Tag | Check (set to true) | Adds the `latest` tag to the images produced by this build |
 
-1. Add another **Docker Compose** task with the same settings (you can also *clone* the previous task). We will just change the **Action** to **Push Images**. This action will instruct the task to push the container image to a container registry
+1. Select the other  **Docker Compose** task you added and provide the same settings (you can also right-click the previous tasks and select *clone* ). Change the **Action** to **Push Service Images**. This action will instruct the task to push the container image to a container registry
 
       ![Maven task settings](images/vsts-mavensettings2.png)
 
-1. Click the **Save and Queue** button to save and queue this build.Make sure you are using the **Hosted Linux Agent**.
+1. The build definition is complete and is ready to run. You will need to specify a build agent to execute this. You will use a hosted Linux agent. Select the **Process** section and choose **Hosted Linux Preview** for the Agent queue.
+
+1. Click the **Save and Queue** button to save and queue this build.
 
 1. Wait for the build to complete. When it is successful you can go to your Azure portal and verify if the images were pushed successfully. 
     ![images/Azure Container Registry Images](images/portal-acrrepo.png)
