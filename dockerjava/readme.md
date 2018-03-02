@@ -22,15 +22,31 @@ This lab will show how you can
 
 * **Microsoft Azure Account**: You will need a valid and active Azure account for the Azure labs. Please see the **Content Window** for the username/password that you can use for the lab
 
-## Exercise 1: Setting up the Environment - Azure Container
+## Exercise 1: Setting up the Environment - Azure 
 
-In this exercise, we will create an Azure Container Registry to store the Docker images for our container deployments. Azure Container Registry is a managed Docker registry service based on the open-source Docker Registry 2.0. You can create and maintain Azure container registries to store and manage your private Docker container images. 
+In this exercise, you will create the necessary Azure resources. You need an Azure Container Registry to store the Docker images for our container deployments. Azure Container Registry is a managed Docker registry service based on the open-source Docker Registry 2.0. You can create and maintain Azure container registries to store and manage your private Docker container images. 
 
 1. Open the [**Azure Portal**](https://portal.azure.com) in a separate tab
 
 1. Select **+New** and search for **Azure Container Registry**. Select **Create**. In the *Create Container Registry* dialog, enter a name for the service, select the resource group, location, **Enable** Admin User etc., and select **Create**.
 
     ![Create Azure Container Registry](images/createacr.png)
+
+1. Next, you will create an Azure Web App to deploy and run the containerized web app. Choose **New, Web + Mobile** and then choose **Web App for Containers**
+
+     ![New Web App for Containers](images/newwebapp.png)
+
+1. Provide a name for the new web app, select existing or create new resource group for the web app. Then select **Configure Container** to specify the source repository for the images. Since we are using ACR to store the images, select **Azure Container Registry**. Select the **Registry**, **Image** value as **web** and **Tag** with the latest build value from the drop-downs. Select **OK** and then select **Create** to start provisioning the web app
+
+    ![Creating MyShuttle Web App for Containers](images/myshuttle-webapp.png)
+
+1. Once the provisioning is complete, go to the web app properties page, and select the URL to browse the web app. You should see the default **Tomcat** page
+
+1. Append **/myshuttledev** the web application context path for the app, to the URL to get to the MyShuttle login page. For example if your web app URL is `https://myshuttle-azure.azurewebsites.net/` , then your URL to the login page is `https://myshuttle-azure.azurewebsites.net/myshuttledev/`
+
+    ![Login Page](images/loginpage.png)
+
+    We could configure *Continuous Deployment* to deploy the web app is updated when a new image is pushed to the registry, within the Azure portal itself. However, setting up a VSTS CD pipeline will provide more flexibility and additional controls (approvals, release gates, etc.) for application deployment
 
 ## Exercise 2: Setting up the Environment - Team Services
 
@@ -151,34 +167,17 @@ Next you will build a CI/CD pipeline in Team Services that will build and push t
 
 1. The build definition is complete and is ready to run. You will need to specify a build agent to execute this. You will use a hosted Linux agent. Select the **Process** section and choose **Hosted Linux Preview** for the Agent queue.
 
-1. Click the **Save and Queue** button to save and queue this build.
+1. Click the **Save and Queue** button to save and queue this build. It may take a couple of minutes for the build to find an agent to run. Once it gets an agent, the build starts executing. You can see the output logs in real-time as the build is running. You can also download the log later should you need to a deeper analysis.
+
 
 1. Wait for the build to complete. When it is successful you can go to your Azure portal and verify if the images were pushed successfully. 
     ![images/Azure Container Registry Images](images/portal-acrrepo.png)
 
-## Exercise 3: Deploying to an Azure Web App for containers
+## Exercise 4: Deploying to an Azure Web App for containers
 
-In this exercise, we will setup a CD pipeline to deploy the web application to an Azure web app. First, let's create the Web App.
+In this exercise, we will setup a release defintion to deploy the web application to an Azure web app. 
 
-1. Sign into your [Azure Portal](https://portal.azure.com)
-
-1. In the Azure Portal, choose **New, Web + Mobile** and then choose **Web App for Containers**
-
-     ![New Web App for Containers](images/newwebapp.png)
-
-1. Provide a name for the new web app, select existing or create new resource group for the web app. Then select **Configure Container** to specify the source repository for the images. Since we are using ACR to store the images, select **Azure Container Registry**. Select the **Registry**, **Image** value as **web** and **Tag** with the latest build value from the drop-downs. Select **OK** and then select **Create** to start provisioning the web app
-
-    ![Creating MyShuttle Web App for Containers](images/myshuttle-webapp.png)
-
-1. Once the provisioning is complete, go to the web app properties page, and select the URL to browse the web app. You should see the default **Tomcat** page
-
-1. Append **/myshuttledev** the web application context path for the app, to the URL to get to the MyShuttle login page. For example if your web app URL is `https://myshuttle-azure.azurewebsites.net/` , then your URL to the login page is `https://myshuttle-azure.azurewebsites.net/myshuttledev/`
-
-    ![Login Page](images/loginpage.png)
-
-    We could configure *Continuous Deployment* to deploy the web app is updated when a new image is pushed to the registry, within the Azure portal itself. However, setting up a VSTS CD pipeline will provide more flexibility and additional controls (approvals, release gates, etc.) for application deployment
-
-1. Back in VSTS, select **Releases** from the **Build and Release** hub. Select **+** and then **Create Release Definition**
+1. Select **Releases** from the **Build and Release** hub. Select **+** and then **Create Release Definition**
 
 1. Select the **Azure App Service Deployment** template and click **Apply**
 
