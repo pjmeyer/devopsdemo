@@ -34,6 +34,8 @@ You will start this lab by first creating **Azure Container Registry** -  a mana
 
     ![Create Azure Container Registry](images/createacr.png)
 
+It should take a couple of minutes for the container registry to be provisioned
+
 ## Exercise 2: Setting up the Environment - Team Services
 
 Next, you will create a Team services project to establish a repository for source code and a place for your team to plan, track progress, and collaborate on building software solutions
