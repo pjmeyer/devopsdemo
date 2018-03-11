@@ -18,7 +18,6 @@ This lab will show how you can
 
 ### Prerequisites for the lab
 
-* **Visual Studio Team Services**: You will need a Visual Studio Team Services Account. If you do not have one, you can sign up for free [here](https://www.visualstudio.com/products/visual-studio-team-services-vs)
 
 * **Microsoft Azure Account**: You will need a valid and active Azure account for the Azure labs. 
 
@@ -26,7 +25,7 @@ This lab will show how you can
 
 ## Exercise 1: Setting up the Environment - Azure 
 
-You will start this lab by first creating **Azure Container Registry** -  a managed Docker registry service based on the open-source Docker Registry 2.0.to store and manage your private Docker container images
+You will start this lab by first creating **Azure Container Registry** -  a managed Docker registry service based on the open-source Docker Registry 2.0. to store and manage your private Docker container images
 
 1. Open the [**Azure Portal**](https://portal.azure.com) in a separate tab
 
@@ -40,18 +39,19 @@ It should take a couple of minutes for the container registry to be provisioned
 
 Next, you will create a Team services project to establish a repository for source code and a place for your team to plan, track progress, and collaborate on building software solutions
 
-1. Navigate to your Team Services account home page - `{https://youraccountname.visualstuduio.com}`
+1. Create a VSTS account by navigating to https://visualstudio.com. You'll see **Visual Studio Team Services** on the home page, click `Get Started for free`. You'll be asked for an account name. Pick any unique name, and click `continue`
 
-1. Select **New Project** to create a new project. Provide a project name and select **Create**
+1. This should create a new empty project. Next, you will add code to the project. Team Services supports **Git**! Next, click on `Generate Git credentials`.
 
-    ![New Project](images/createproject.png)
+    - For `Alias`, enter your username **before** the '@' sign
+    - For `Password`, choose your own password
 
-1. This should create an empty project. Next, you will add code to the project. Team Services supports **Git** 
+    Hit `Save Git Credentials`. You'll use these in a moment. 
 
 1. Open a **Terminal** window and enter the following command to change the current working directory
 
     ````bash
-    cd \home\vmadmin\myshuttledocker
+    cd ./myshuttledocker
     ````
 
 1. Next initialize a git repo in the current folder
@@ -67,10 +67,12 @@ Next, you will create a Team services project to establish a repository for sour
     ````
     git commit -m "Initial Commit"
     ````
-1. Next paste the text you copied to add the local repo to the remote Git repo and push the changes. You may be prompted to enter your credentials in order to push the changes.
+1. Next copy the https:// URL of your repo from VSTS and paste it into the terminal to add the local repo to the remote Git repo and push the changes. You may be prompted to enter your the username and password you generated in "Generate Git Credentials" in order to push the changes.
+
+> 
 
     ````
-    git remote add origin https://devops-demos.visualstudio.com/DefaultCollection/_git/My%20Shuttle
+    git remote add origin https://<The account name you created>.visualstudio.com/DefaultCollection/_git/My%20Shuttle
     git push -u origin --all
     ````
 
